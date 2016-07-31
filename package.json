@@ -1,0 +1,43 @@
+{
+  "name": "react-material-datatable",
+  "version": "0.0.1",
+  "description": "A React.js component for the creation of a datatable with the google material design style",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --inline --config demo/webpack.config.dev.js",
+    "build": "npm run build:lib && npm run build:dist && npm run build:demo",
+    "build:lib": "babel src --out-dir lib",
+    "build:dist": "webpack",
+    "build:demo": "webpack --config demo/webpack.config.dev.js",
+    "clean": "rm ./dist/* && rm ./lib/* && rm ./demo/build/*",
+    "version": "npm run build && git add -A dist  && git add -A lib && git add -A demo/build"
+  },
+  "keywords": [
+    "react",
+    "datatable",
+    "material",
+    "table",
+    "react-component",
+    "react.js",
+    "component"
+  ],
+  "author": "Danilo Salvati",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-core": "^6.9.0",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "react": "^15.0.2",
+    "react-dom": "^15.1.0",
+    "webpack": "^1.13.0",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "peerDependencies": {
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0"
+  }
+}
