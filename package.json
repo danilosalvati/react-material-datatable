@@ -22,8 +22,16 @@
     "react.js",
     "component"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danilosalvati/react-material-datatable"
+  },
   "author": "Danilo Salvati",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danilosalvati/react-material-datatable/issues"
+  },
+  "homepage": "https://github.com/danilosalvati/react-material-datatable#readme",
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.0",
