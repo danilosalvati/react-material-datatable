@@ -7,14 +7,14 @@ module.exports = {
     path: __dirname + "/build",
     filename: "demo.build.js"
   },
-  externals: {
-    "react": "React",
-    "react-dom": "ReactDOM"
-  },
+  // externals: {
+  //   "react": "React",
+  //   "react-dom": "ReactDOM"
+  // },
   devServer: {
     contentBase: path.resolve(__dirname)
   },
-  devtool: "eval",
+  devtool: "source-map",
   module: {
     loaders: [
       {
