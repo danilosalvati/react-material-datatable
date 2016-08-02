@@ -6,6 +6,13 @@ export default class Table extends React.Component {
 
   constructor(props) {
     super(props);
+
+    let columns = this.props.columns.sort(this._orderColumnsByPosition);
+    this.state = {columns};
+  }
+
+  _orderColumnsByPosition(column1, column2) {
+    return column1.position - column2.position;
   }
 
   render() {
@@ -14,7 +21,7 @@ export default class Table extends React.Component {
 
         <thead>
         <tr>
-          {this.props.columns.map(column => {
+          {this.state.columns.map(column => {
             return this.props.columnComponent({key: column.id, column: column});
           })}
         </tr>
@@ -22,7 +29,7 @@ export default class Table extends React.Component {
 
         <tbody>
         {this.props.data.map((rowData, index) => {
-          return this.props.rowComponent({key: index, columns: this.props.columns, row: rowData});
+          return this.props.rowComponent({key: index, columns: this.state.columns, row: rowData});
         })}
         </tbody>
 
