@@ -1,6 +1,6 @@
 import React from 'react';
-import ColumnComponent from './default-components/column-component';
-import RowComponent from './default-components/row-component';
+import DefaultColumnComponent from './default-components/column-component';
+import DefaultRowComponent from './default-components/row-component';
 
 export default class Table extends React.Component {
 
@@ -15,14 +15,14 @@ export default class Table extends React.Component {
         <thead>
         <tr>
           {this.props.columns.map(column => {
-            return <ColumnComponent key={column.id} column={column}/>
+            return this.props.columnComponent({key: column.id, column: column});
           })}
         </tr>
         </thead>
 
         <tbody>
         {this.props.data.map((rowData, index) => {
-          return (<RowComponent key={index} columns={this.props.columns} row={rowData}/>)
+          return this.props.rowComponent({key: index, columns: this.props.columns, row: rowData});
         })}
         </tbody>
 
@@ -57,7 +57,13 @@ Table.propTypes = {
 
   },
 
+  columnComponent: React.PropTypes.func,
+  rowComponent: React.PropTypes.func,
+
 };
 
-//Table.defaultProps = {};
+Table.defaultProps = {
+  columnComponent: DefaultColumnComponent,
+  rowComponent: DefaultRowComponent
+};
 
