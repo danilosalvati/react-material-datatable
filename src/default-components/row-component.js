@@ -13,17 +13,15 @@ let rowStyle = {
     border: '1px solid rgba(0,0,0,0.10)',
     borderStyle: 'solid none none none',
   },
+  baseCell: {
+    paddingLeft: '28px',
+    paddingRight: '28px'
+  },
   textCell: {
     textAlign: 'left',
-    paddingLeft: '28px',
-    paddingRight: '28px',
-
   },
   numericCell: {
     textAlign: 'right',
-    paddingLeft: '28px',
-    paddingRight: '28px',
-
   }
 };
 
@@ -43,7 +41,8 @@ export default class DefaultRowComponent extends React.Component {
 
     let cells = [];
     this.props.columns.forEach((column, index) => {
-      cells.push((<td key={index} style={rowStyle.textCell}>{this.props.row[column.id]}</td>));
+      cells.push((
+        <td key={index} style={{...rowStyle.baseCell,...rowStyle.textCell}}>{this.props.row[column.id]}</td>));
     });
 
     return (
