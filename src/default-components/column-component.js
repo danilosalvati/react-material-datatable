@@ -1,3 +1,5 @@
+import React from 'react';
+
 let columnStyle = {
   standardColumn: {
     fontFamily: 'Roboto, sans-serif',
@@ -15,7 +17,17 @@ let columnStyle = {
   }
 };
 
+export default class DefaultColumnComponent extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-export default ({column}) => (
-  <th style={columnStyle.standardColumn}>{column.name}</th>
-);
+
+  render() {
+    return (<th style={columnStyle.standardColumn}>{this.props.column.name}</th>);
+  }
+}
+
+DefaultColumnComponent.propTypes = {
+  column: React.PropTypes.object.isRequired,
+};

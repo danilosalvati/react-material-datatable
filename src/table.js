@@ -23,7 +23,7 @@ export default class Table extends React.Component {
         <thead>
         <tr>
           {this.state.columns.map(column => {
-            return this.props.columnComponent({key: column.id, column: column});
+            return <DefaultColumnComponent key={column.id} column={column}/>
           })}
         </tr>
         </thead>
