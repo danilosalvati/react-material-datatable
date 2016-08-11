@@ -1,6 +1,7 @@
 import React from 'react';
 import DefaultColumnComponent from './default-components/column-component';
 import DefaultRowComponent from './default-components/row-component';
+import tableStyle from './table-style';
 
 export default class Table extends React.Component {
 
@@ -17,7 +18,7 @@ export default class Table extends React.Component {
 
   render() {
     return (
-      <table>
+      <table style={tableStyle}>
 
         <thead>
         <tr>
@@ -29,7 +30,7 @@ export default class Table extends React.Component {
 
         <tbody>
         {this.props.data.map((rowData, index) => {
-          return this.props.rowComponent({key: index, columns: this.state.columns, row: rowData});
+          return <DefaultRowComponent key={index} columns={this.state.columns} row={rowData}/>
         })}
         </tbody>
 
