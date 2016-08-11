@@ -7,8 +7,7 @@ let columnStyle = {
     fontSize: '12px',
     color: 'rgba(0,0,0,0.54)',
     height: '56px',
-    paddingLeft: '28px',
-    paddingRight: '28px',
+    paddingRight: '56px',
     textAlign: 'left'
   },
   sortedColumn: {

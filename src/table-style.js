@@ -3,6 +3,6 @@ export default {
   fontStyle: 'normal',
   fontSize:'13px',
   color:'rgba(0,0,0,0.87)',
-  padding:'24px',
   borderCollapse: 'collapse',
+  padding:'50px'
 };
