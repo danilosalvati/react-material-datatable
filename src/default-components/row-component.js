@@ -8,7 +8,7 @@ let rowStyle = {
     borderStyle: 'solid none none none',
   },
   hoveredRow: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#EEEEEE',
     height: '48px',
     border: '1px solid rgba(0,0,0,0.10)',
     borderStyle: 'solid none none none',
