@@ -27,6 +27,7 @@ export const data = [
     "#col1": "1",
     "#col2": "2",
     "#col3": "3",
+    selected: true,
   },
   {
     "#col1": "4",

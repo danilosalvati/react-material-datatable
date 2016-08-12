@@ -34,16 +34,16 @@ export default class CheckBox extends React.Component {
 
     let path;
     switch (this.state.checkBoxMode) {
-      case 'undeterminated':
+      case UNDETERMINATED_MODE:
         path = (<path fillOpacity={fillOpacity}
                       d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/>);
         break;
-      case 'selected':
+      case SELECTED_MODE:
         path = (<path fill='#2196F3' fillOpacity={fillOpacity}
                       d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9
         14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>);
         break;
-      case 'unselected':
+      case UNSELECTED_MODE:
       default:
         path = (<path fillOpacity={fillOpacity}
                       d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>);
@@ -59,7 +59,7 @@ export default class CheckBox extends React.Component {
 }
 
 CheckBox.propTypes = {
-  checkBoxMode: React.PropTypes.oneOf(['undeterminated', 'unselected', 'selected']).isRequired,
+  checkBoxMode: React.PropTypes.oneOf([UNDETERMINATED_MODE, UNSELECTED_MODE, SELECTED_MODE]).isRequired,
   isHeader: React.PropTypes.bool.isRequired,
   onChangeFunction: React.PropTypes.func
 };

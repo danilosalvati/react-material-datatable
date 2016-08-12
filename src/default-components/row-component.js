@@ -32,24 +32,26 @@ export default class DefaultRowComponent extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {hovered: false, selected: false};
+    this.state = {hovered: false};
     this.changeHoverMode = this.changeHoverMode.bind(this);
-    this.changeSelectedMode = this.changeSelectedMode.bind(this);
   }
 
   changeHoverMode() {
     this.setState({hovered: !this.state.hovered});
   }
 
-  changeSelectedMode() {
-    this.setState({selected: !this.state.selected});
-  }
-
   render() {
+
+    let checkBoxMode = 'unselected';
+    if (this.props.isSelected) {
+      checkBoxMode = 'selected'
+    }
 
     let cells = [];
     cells.push((
-      <td key={"-1"}><CheckBox isHeader={false} onChangeFunction={this.changeSelectedMode} checkBoxMode='unselected'/>
+      <td key={"-1"}><CheckBox isHeader={false}
+                               onChangeFunction={this.props.onRowSelection}
+                               checkBoxMode={checkBoxMode}/>
       </td>));
     this.props.columns.forEach((column, index) => {
       cells.push((
@@ -57,9 +59,10 @@ export default class DefaultRowComponent extends React.Component {
     });
 
     return (
-      <tr style={this.state.selected?rowStyle.selectedRow: this.state.hovered?rowStyle.hoveredRow:rowStyle.standardRow}
-          onMouseEnter={() => this.changeHoverMode()}
-          onMouseLeave={() => this.changeHoverMode()}>{cells}</tr>
+      <tr
+        style={this.props.isSelected?rowStyle.selectedRow: this.state.hovered?rowStyle.hoveredRow:rowStyle.standardRow}
+        onMouseEnter={() => this.changeHoverMode()}
+        onMouseLeave={() => this.changeHoverMode()}>{cells}</tr>
     );
 
   }
@@ -67,5 +70,11 @@ export default class DefaultRowComponent extends React.Component {
 
 DefaultRowComponent.propTypes = {
   columns: React.PropTypes.array.isRequired,
-  row: React.PropTypes.object.isRequired
+  row: React.PropTypes.object.isRequired,
+  isSelected: React.PropTypes.bool,
+  onRowSelection: React.PropTypes.func.isRequired
+};
+
+DefaultRowComponent.defaultProps = {
+  isSelected: false
 };

@@ -10,13 +10,31 @@ export default class Table extends React.Component {
     super(props);
 
     let columns = this.props.columns.sort(this._orderColumnsByPosition);
-    this.state = {columns};
+    let rows = [];
+    this.props.data.forEach(row => {
+      if (!row.hasOwnProperty('selected')) {
+        row.selected = false;
+      }
+      rows.push(row);
+    });
+
+    this.state = {columns, rows};
+
+    this.selectionCallback = this.selectionCallback.bind(this);
   }
 
   _orderColumnsByPosition(column1, column2) {
     return column1.position - column2.position;
   }
-  
+
+  selectionCallback(currentValue, index, array) {
+    array[index].selected = !array[index].selected
+    this.setState({rows: array});
+
+    // Execute user callback
+    this.props.onRowSelection(currentValue, index, array);
+  }
+
   render() {
     return (
       <table style={tableStyle}>
@@ -31,8 +49,12 @@ export default class Table extends React.Component {
         </thead>
 
         <tbody>
-        {this.props.data.map((rowData, index) => {
-          return <DefaultRowComponent key={index} columns={this.state.columns} row={rowData}/>
+        {this.state.rows.map((row, index, array) => {
+          return <DefaultRowComponent key={index}
+                                      columns={this.state.columns}
+                                      row={row}
+                                      isSelected={row.selected}
+                                      onRowSelection={() => this.selectionCallback(row,index, array)}/>
         })}
         </tbody>
 
@@ -50,10 +72,14 @@ Table.propTypes = {
     }
 
     let columns = props['columns'];
+    let acceptedTags = ['selected'];
     props[propName].forEach(dataRow => {
       for (let col in dataRow) {
-
+        
         let found = false;
+        acceptedTags.forEach(tag => {
+          found = found || (col === tag)
+        });
         for (let i = 0; i < columns.length && !found; i++) {
           found = columns[i].id === col;
         }
@@ -69,11 +95,13 @@ Table.propTypes = {
 
   columnComponent: React.PropTypes.func,
   rowComponent: React.PropTypes.func,
+  onRowSelection: React.PropTypes.func
 
 };
 
 Table.defaultProps = {
   columnComponent: DefaultColumnComponent,
-  rowComponent: DefaultRowComponent
+  rowComponent: DefaultRowComponent,
+  onRowSelection: () => null
 };
 
