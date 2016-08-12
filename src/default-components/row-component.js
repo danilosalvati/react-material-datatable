@@ -46,7 +46,7 @@ export default class DefaultRowComponent extends React.Component {
     if (this.props.isSelected) {
       checkBoxMode = 'selected'
     }
-
+    
     let cells = [];
     cells.push((
       <td key={"-1"}><CheckBox isHeader={false}

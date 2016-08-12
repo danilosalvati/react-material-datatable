@@ -11,16 +11,27 @@ export default class Table extends React.Component {
 
     let columns = this.props.columns.sort(this._orderColumnsByPosition);
     let rows = [];
+    let selectedCount = 0;
     this.props.data.forEach(row => {
       if (!row.hasOwnProperty('selected')) {
         row.selected = false;
+      } else if (row.selected) {
+        selectedCount++;
       }
       rows.push(row);
     });
 
-    this.state = {columns, rows};
+    let checkAllState = 'unselected';
+    if (selectedCount === rows.length) {
+      checkAllState = "selected";
+    } else if (selectedCount > 0) {
+      checkAllState = 'undeterminated';
+    }
+    this.state = {columns, rows, checkAllState: checkAllState};
 
     this.selectionCallback = this.selectionCallback.bind(this);
+    this.selectAllRows = this.selectAllRows.bind(this);
+    this.unselectAllRows = this.unselectAllRows.bind(this);
   }
 
   _orderColumnsByPosition(column1, column2) {
@@ -28,11 +39,40 @@ export default class Table extends React.Component {
   }
 
   selectionCallback(currentValue, index, array) {
-    array[index].selected = !array[index].selected
+    array[index].selected = !array[index].selected;
     this.setState({rows: array});
 
     // Execute user callback
     this.props.onRowSelection(currentValue, index, array);
+  }
+
+  selectAllRows(rowArray) {
+    rowArray.forEach(row => {
+      row.selected = true;
+    });
+
+    return rowArray;
+  }
+
+  unselectAllRows(rowArray) {
+    rowArray.forEach(row => {
+      row.selected = false;
+    });
+
+    return rowArray;
+  }
+
+
+  checkAllCallback(columns, rows) {
+    switch (this.state.checkAllState) {
+      case 'unselected':
+        this.setState({checkAllState:'selected',rows: this.selectAllRows(rows)});
+        break;
+      case 'selected':
+      case 'undeterminated':
+        this.setState({checkAllState:'unselected',rows: this.unselectAllRows(rows)});
+    }
+
   }
 
   render() {
@@ -41,9 +81,12 @@ export default class Table extends React.Component {
 
         <thead>
         <tr>
-          <th><CheckBox isHeader={true} checkBoxMode='unselected'/></th>
+          <th><CheckBox isHeader={true}
+                        checkBoxMode={this.state.checkAllState}
+                        onChangeFunction={() => this.checkAllCallback(this.state.columns,this.state.rows)}/></th>
           {this.state.columns.map(column => {
-            return <DefaultColumnComponent key={column.id} column={column}/>
+            return <DefaultColumnComponent key={column.id}
+                                           column={column}/>
           })}
         </tr>
         </thead>
@@ -75,7 +118,7 @@ Table.propTypes = {
     let acceptedTags = ['selected'];
     props[propName].forEach(dataRow => {
       for (let col in dataRow) {
-        
+
         let found = false;
         acceptedTags.forEach(tag => {
           found = found || (col === tag)

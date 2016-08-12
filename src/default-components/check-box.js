@@ -12,15 +12,6 @@ export default class CheckBox extends React.Component {
   }
 
   changeMode() {
-    switch (this.state.checkBoxMode) {
-      case SELECTED_MODE:
-        this.setState({checkBoxMode: UNSELECTED_MODE});
-        break;
-      case UNSELECTED_MODE:
-        this.setState({checkBoxMode: SELECTED_MODE});
-        break;
-    }
-
     // Now I can execute the listener defined by the user
     this.props.onChangeFunction();
   }
@@ -33,9 +24,9 @@ export default class CheckBox extends React.Component {
     }
 
     let path;
-    switch (this.state.checkBoxMode) {
+    switch (this.props.checkBoxMode) {
       case UNDETERMINATED_MODE:
-        path = (<path fillOpacity={fillOpacity}
+        path = (<path fill='#2196F3' fillOpacity={fillOpacity}
                       d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/>);
         break;
       case SELECTED_MODE:
