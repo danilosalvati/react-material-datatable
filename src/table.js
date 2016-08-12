@@ -2,6 +2,7 @@ import React from 'react';
 import DefaultColumnComponent from './default-components/column-component';
 import DefaultRowComponent from './default-components/row-component';
 import tableStyle from './table-style';
+import CheckBox from './default-components/check-box';
 
 export default class Table extends React.Component {
 
@@ -15,13 +16,14 @@ export default class Table extends React.Component {
   _orderColumnsByPosition(column1, column2) {
     return column1.position - column2.position;
   }
-
+  
   render() {
     return (
       <table style={tableStyle}>
 
         <thead>
         <tr>
+          <th><CheckBox isHeader={true} checkBoxMode='unselected'/></th>
           {this.state.columns.map(column => {
             return <DefaultColumnComponent key={column.id} column={column}/>
           })}
