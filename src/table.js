@@ -40,7 +40,22 @@ export default class Table extends React.Component {
 
   selectionCallback(currentValue, index, array) {
     array[index].selected = !array[index].selected;
-    this.setState({rows: array});
+
+    let count = 0;
+    array.forEach(row => {
+      if (row.selected) {
+        count++;
+      }
+    });
+
+    let checkAllState = 'unselected';
+    if (count === array.length) {
+      checkAllState = "selected";
+    } else if (count > 0) {
+      checkAllState = 'undeterminated';
+    }
+
+    this.setState({rows: array, checkAllState});
 
     // Execute user callback
     this.props.onRowSelection(currentValue, index, array);
@@ -66,11 +81,11 @@ export default class Table extends React.Component {
   checkAllCallback(columns, rows) {
     switch (this.state.checkAllState) {
       case 'unselected':
-        this.setState({checkAllState:'selected',rows: this.selectAllRows(rows)});
+        this.setState({checkAllState: 'selected', rows: this.selectAllRows(rows)});
         break;
       case 'selected':
       case 'undeterminated':
-        this.setState({checkAllState:'unselected',rows: this.unselectAllRows(rows)});
+        this.setState({checkAllState: 'unselected', rows: this.unselectAllRows(rows)});
     }
 
   }
