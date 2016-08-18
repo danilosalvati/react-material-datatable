@@ -14,6 +14,7 @@ let columnStyle = {
     height: '56px',
     paddingRight: '56px',
     textAlign: 'left',
+    cursor: 'pointer'
   },
   sortedColumn: {
     color: 'rgba(0,0,0,0.87)'
@@ -33,7 +34,7 @@ export default class DefaultColumnComponent extends React.Component {
       style = {...style, ...columnStyle.sortedColumn}
     }
 
-    return (<th style={style}>
+    return (<th style={style} onClick={this.props.onColumnSelection}>
       <SortArrow sortOrder={this.props.sortOrder}/>
       {this.props.column.name}</th>);
   }
@@ -41,5 +42,7 @@ export default class DefaultColumnComponent extends React.Component {
 
 DefaultColumnComponent.propTypes = {
   column: React.PropTypes.object.isRequired,
-  sortOrder: React.PropTypes.oneOf([DESCENDANT, ASCENDANT, NOT_SORTED]).isRequired,
+  isSortable: React.PropTypes.bool.isRequired,
+  sortOrder: React.PropTypes.oneOf([DESCENDANT, ASCENDANT, NOT_SORTED]),
+  onColumnSelection: React.PropTypes.func
 };
