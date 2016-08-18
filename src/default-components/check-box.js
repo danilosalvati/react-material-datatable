@@ -7,7 +7,6 @@ const UNSELECTED_MODE = 'unselected';
 export default class CheckBox extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {checkBoxMode: this.props.checkBoxMode};
     this.changeMode = this.changeMode.bind(this);
   }
 

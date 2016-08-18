@@ -24,7 +24,7 @@ export default class Demo extends React.Component {
     return (
       <div>
         <p>This is a first example for the table component</p>
-        <Table columns={columns} data={data} onRowSelection={rowSelectionCallback}/>
+        <Table columns={columns} data={data} onRowSelection={rowSelectionCallback} sortable={true}/>
       </div>
     )
   }

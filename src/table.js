@@ -10,6 +10,15 @@ export default class Table extends React.Component {
     super(props);
 
     let columns = this.props.columns.sort(this._orderColumnsByPosition);
+
+    columns.map(column => {
+      column.sortOrder='not_sorted'
+    });
+
+    if (this.props.sortable) {
+      columns[0].sortOrder = 'ascendant';
+    }
+
     let rows = [];
     let selectedCount = 0;
     this.props.data.forEach(row => {
@@ -101,7 +110,8 @@ export default class Table extends React.Component {
                         onChangeFunction={() => this.checkAllCallback(this.state.columns,this.state.rows)}/></th>
           {this.state.columns.map(column => {
             return <DefaultColumnComponent key={column.id}
-                                           column={column}/>
+                                           column={column}
+                                           sortOrder={column.sortOrder}/>
           })}
         </tr>
         </thead>
@@ -153,13 +163,15 @@ Table.propTypes = {
 
   columnComponent: React.PropTypes.func,
   rowComponent: React.PropTypes.func,
-  onRowSelection: React.PropTypes.func
+  onRowSelection: React.PropTypes.func,
+  sortable: React.PropTypes.bool
 
 };
 
 Table.defaultProps = {
   columnComponent: DefaultColumnComponent,
   rowComponent: DefaultRowComponent,
-  onRowSelection: () => null
+  onRowSelection: () => null,
+  sortable: true
 };
 
