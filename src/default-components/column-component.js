@@ -64,8 +64,8 @@ export default class DefaultColumnComponent extends React.Component {
 
     return (<th style={style}
                 onClick={this.props.onColumnSelection}
-                onMouseEnter={() => {console.log("CIAO"); this.changeHoverMode()}}
-                onMouseLeave={() => {console.log("CIAO2"); this.changeHoverMode()}}>
+                onMouseEnter={() => {this.changeHoverMode()}}
+                onMouseLeave={() => {this.changeHoverMode()}}>
       <SortArrow sortOrder={sortOrder}
                  fillOpacity={fillOpacity}/>
       {this.props.column.name}</th>);

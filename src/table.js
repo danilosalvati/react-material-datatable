@@ -39,8 +39,6 @@ export default class Table extends React.Component {
       rows = this.sortRows(columns[0],'ascendant', rows);
     }
 
-    console.log(columns);
-
     this.state = {columns, rows, checkAllState: checkAllState};
 
     this.selectionCallback = this.selectionCallback.bind(this);
