@@ -28,7 +28,9 @@ export default class Demo extends React.Component {
                data={data}
                onRowSelection={rowSelectionCallback}
                sortable={true}
-               useCard={true}/>
+               useCard={true}
+               width="600px"
+               />
       </div>
     )
   }

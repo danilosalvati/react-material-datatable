@@ -152,7 +152,7 @@ export default class Table extends React.Component {
 
   render() {
 
-    let tableComponent = (<table style={tableStyle}>
+    let tableComponent = (<table style={{...tableStyle, width: this.props.width, height:this.props.height}}>
       <thead>
       <tr>
         <th style={{width:'24px'}}><CheckBox isHeader={true}
@@ -189,12 +189,14 @@ export default class Table extends React.Component {
 
     if (this.props.useCard) {
       return (
-        <Card>
+        <Card width={this.props.width} height={this.props.height}>
           {tableComponent}
         </Card>);
     }
 
-    return tableComponent;
+    return (<div style={{width:this.props.width, height: this.props.height, overflow:'auto'}}>
+      {tableComponent}
+    </div>);
   }
 }
 
@@ -234,7 +236,9 @@ Table.propTypes = {
   onRowSelection: React.PropTypes.func,
   onColumnSelection: React.PropTypes.func,
   sortable: React.PropTypes.bool,
-  useCard: React.PropTypes.bool
+  useCard: React.PropTypes.bool,
+  width: React.PropTypes.string,
+  height: React.PropTypes.string
 
 };
 
@@ -244,6 +248,8 @@ Table.defaultProps = {
   onRowSelection: () => null,
   onColumnSelection: () => null,
   sortable: true,
-  useCard: true
+  useCard: true,
+  width: '100%',
+  height:'100%'
 };
 
