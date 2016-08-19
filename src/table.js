@@ -36,7 +36,7 @@ export default class Table extends React.Component {
 
     if (this.props.sortable) {
       columns[0].sortOrder = 'ascendant';
-      rows = this.sortRows(columns[0],'ascendant', rows);
+      rows = this.sortRows(columns[0], 'ascendant', rows);
     }
 
     this.state = {columns, rows, checkAllState: checkAllState};
@@ -159,11 +159,18 @@ export default class Table extends React.Component {
                         checkBoxMode={this.state.checkAllState}
                         onChangeFunction={() => this.checkAllCallback(this.state.columns,this.state.rows)}/></th>
           {this.state.columns.map((column, index, array) => {
+            let onColumnSelection = () => {
+            };
+
+            if (this.props.sortable) {
+              onColumnSelection = () => this.sortCallback(column, index, array)
+            }
+
             return <DefaultColumnComponent key={column.id}
                                            column={column}
                                            isSortable={this.props.sortable}
                                            sortOrder={column.sortOrder}
-                                           onColumnSelection={() => this.sortCallback(column, index, array)}/>
+                                           onColumnSelection={() => onColumnSelection(column, index, array)}/>
           })}
         </tr>
         </thead>
