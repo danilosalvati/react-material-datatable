@@ -4,14 +4,17 @@ import DefaultRowComponent from './default-components/row-component';
 import tableStyle from './table-style';
 import CheckBox from './default-components/check-box';
 import Card from './default-components/card';
-import {stringComparator, numericComparator, dateComparator} from './utils/comparators';
+import {dataValidator} from './utils/validators';
+import {sortRows, selectAllRows, unselectAllRows} from './utils/utilities';
 
 export default class Table extends React.Component {
 
   constructor(props) {
     super(props);
 
-    let columns = this.props.columns.sort(this._orderColumnsByPosition);
+    let columns = this.props.columns.sort((column1, column2) => {
+      return column1.position - column2.position;
+    });
 
     let rows = [];
     let selectedCount = 0;
@@ -37,43 +40,15 @@ export default class Table extends React.Component {
 
     if (this.props.sortable) {
       columns[0].sortOrder = 'ascendant';
-      rows = this.sortRows(columns[0], 'ascendant', rows);
+      rows = sortRows(columns[0], 'ascendant', rows);
     }
 
     this.state = {columns, rows, checkAllState: checkAllState};
 
     this.selectionCallback = this.selectionCallback.bind(this);
-    this.selectAllRows = this.selectAllRows.bind(this);
-    this.unselectAllRows = this.unselectAllRows.bind(this);
     this.sortCallback = this.sortCallback.bind(this);
-    this.sortRows = this.sortRows.bind(this);
   }
 
-  _orderColumnsByPosition(column1, column2) {
-    return column1.position - column2.position;
-  }
-
-  sortRows(column, sortOrder, rows) {
-    let compareFunction;
-    switch (column.type) {
-      case 'numeric':
-        compareFunction = numericComparator;
-        break;
-      case 'date':
-        compareFunction = dateComparator;
-        break;
-      case 'string':
-      default:
-        compareFunction = stringComparator;
-    }
-
-    let factor = sortOrder === 'ascendant' ? 1 : -1;
-    rows.sort((a, b) => {
-      return factor * compareFunction(a[column.id], b[column.id]);
-    });
-
-    return rows;
-  }
 
   sortCallback(currentValue, index, array) {
 
@@ -87,10 +62,10 @@ export default class Table extends React.Component {
 
     if (previousOrder === 'descendant' || previousOrder === "not_sorted") {
       array[index].sortOrder = 'ascendant';
-      rows = this.sortRows(currentValue, 'ascendant', this.state.rows);
+      rows = sortRows(currentValue, 'ascendant', this.state.rows);
     } else {
       array[index].sortOrder = 'descendant';
-      rows = this.sortRows(currentValue, 'descendant', this.state.rows);
+      rows = sortRows(currentValue, 'descendant', this.state.rows);
     }
 
     this.setState({columns: array, rows: rows});
@@ -121,31 +96,14 @@ export default class Table extends React.Component {
     this.props.onRowSelection(currentValue, index, array);
   }
 
-  selectAllRows(rowArray) {
-    rowArray.forEach(row => {
-      row.selected = true;
-    });
-
-    return rowArray;
-  }
-
-  unselectAllRows(rowArray) {
-    rowArray.forEach(row => {
-      row.selected = false;
-    });
-
-    return rowArray;
-  }
-
-
   checkAllCallback(columns, rows) {
     switch (this.state.checkAllState) {
       case 'unselected':
-        this.setState({checkAllState: 'selected', rows: this.selectAllRows(rows)});
+        this.setState({checkAllState: 'selected', rows: selectAllRows(rows)});
         break;
       case 'selected':
       case 'undeterminated':
-        this.setState({checkAllState: 'unselected', rows: this.unselectAllRows(rows)});
+        this.setState({checkAllState: 'unselected', rows: unselectAllRows(rows)});
     }
 
   }
@@ -156,8 +114,9 @@ export default class Table extends React.Component {
       <thead>
       <tr>
         <th style={{width:'24px'}}><CheckBox isHeader={true}
-                      checkBoxMode={this.state.checkAllState}
-                      onChangeFunction={() => this.checkAllCallback(this.state.columns,this.state.rows)}/></th>
+                                             checkBoxMode={this.state.checkAllState}
+                                             onChangeFunction={() => this.checkAllCallback(this.state.columns,this.state.rows)}/>
+        </th>
         {this.state.columns.map((column, index, array) => {
           let onColumnSelection = () => {
           };
@@ -202,35 +161,7 @@ export default class Table extends React.Component {
 
 Table.propTypes = {
   columns: React.PropTypes.array.isRequired,
-  data: function (props, propName, componentName) {
-
-    if (Object.prototype.toString.call(props[propName]) !== '[object Array]') {
-      console.error(`Warning: Invalid prop ${propName} type, it must be an array. Check data property passed to Table`);
-      return new Error(`Invalid prop ${propName} type, it must be an array`);
-    }
-
-    let columns = props['columns'];
-    let acceptedTags = ['selected'];
-    props[propName].forEach(dataRow => {
-      for (let col in dataRow) {
-
-        let found = false;
-        acceptedTags.forEach(tag => {
-          found = found || (col === tag)
-        });
-        for (let i = 0; i < columns.length && !found; i++) {
-          found = columns[i].id === col;
-        }
-
-        if (!found) {
-          console.error(`Warning: Invalid column ${col} in data. Check data property passed to Table`);
-          return new Error(`Invalid column ${col} in data`);
-        }
-      }
-    });
-
-  },
-
+  data: dataValidator,
   columnComponent: React.PropTypes.func,
   rowComponent: React.PropTypes.func,
   onRowSelection: React.PropTypes.func,
@@ -239,7 +170,6 @@ Table.propTypes = {
   useCard: React.PropTypes.bool,
   width: React.PropTypes.string,
   height: React.PropTypes.string
-
 };
 
 Table.defaultProps = {
@@ -250,6 +180,6 @@ Table.defaultProps = {
   sortable: true,
   useCard: true,
   width: '100%',
-  height:'100%'
+  height: '100%'
 };
 
