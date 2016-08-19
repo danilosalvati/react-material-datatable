@@ -4,6 +4,7 @@ import DefaultRowComponent from './default-components/row-component';
 import tableStyle from './styles/table-style';
 import CheckBox from './default-components/check-box';
 import Card from './default-components/card';
+import Paginator from './default-components/paginator';
 import {dataValidator} from './utils/validators';
 import {sortRows, selectAllRows, unselectAllRows} from './utils/utilities';
 
@@ -105,7 +106,7 @@ export default class Table extends React.Component {
       case 'undeterminated':
         this.setState({checkAllState: 'unselected', rows: unselectAllRows(rows)});
     }
-    
+
     this.props.onSelectAll(columns, rows);
 
   }
@@ -152,6 +153,7 @@ export default class Table extends React.Component {
       return (
         <Card width={this.props.width} height={this.props.height}>
           {tableComponent}
+          <Paginator page={1} totalRows={20} rowsPerPage={5} />
         </Card>);
     }
 
