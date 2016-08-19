@@ -21,16 +21,25 @@ export default class Demo extends React.Component {
       }
     };
 
+    let onSelectAllCallback = (columns, rows) => {
+      if (rows[0].selected) {
+        console.log("Selected all rows");
+      } else {
+        console.log("Unselected all rows");
+      }
+    };
+
     return (
       <div>
         <p>This is a first example for the table component</p>
         <Table columns={columns}
                data={data}
                onRowSelection={rowSelectionCallback}
+               onSelectAll={onSelectAllCallback}
                sortable={true}
                useCard={true}
                width="600px"
-               />
+        />
       </div>
     )
   }

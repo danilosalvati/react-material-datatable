@@ -105,6 +105,8 @@ export default class Table extends React.Component {
       case 'undeterminated':
         this.setState({checkAllState: 'unselected', rows: unselectAllRows(rows)});
     }
+    
+    this.props.onSelectAll(columns, rows);
 
   }
 
@@ -166,6 +168,7 @@ Table.propTypes = {
   rowComponent: React.PropTypes.func,
   onRowSelection: React.PropTypes.func,
   onColumnSelection: React.PropTypes.func,
+  onSelectAll: React.PropTypes.func,
   sortable: React.PropTypes.bool,
   useCard: React.PropTypes.bool,
   width: React.PropTypes.string,
@@ -177,6 +180,7 @@ Table.defaultProps = {
   rowComponent: DefaultRowComponent,
   onRowSelection: () => null,
   onColumnSelection: () => null,
+  onSelectAll: () => null,
   sortable: true,
   useCard: true,
   width: '100%',
