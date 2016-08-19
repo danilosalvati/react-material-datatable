@@ -3,6 +3,7 @@ import DefaultColumnComponent from './default-components/column-component';
 import DefaultRowComponent from './default-components/row-component';
 import tableStyle from './table-style';
 import CheckBox from './default-components/check-box';
+import Card from './default-components/card';
 import {stringComparator, numericComparator, dateComparator} from './utils/comparators';
 
 export default class Table extends React.Component {
@@ -150,42 +151,50 @@ export default class Table extends React.Component {
   }
 
   render() {
-    return (
-      <table style={tableStyle}>
 
-        <thead>
-        <tr>
-          <th><CheckBox isHeader={true}
-                        checkBoxMode={this.state.checkAllState}
-                        onChangeFunction={() => this.checkAllCallback(this.state.columns,this.state.rows)}/></th>
-          {this.state.columns.map((column, index, array) => {
-            let onColumnSelection = () => {
-            };
+    let tableComponent = (<table style={tableStyle}>
+      <thead>
+      <tr>
+        <th style={{width:'24px'}}><CheckBox isHeader={true}
+                      checkBoxMode={this.state.checkAllState}
+                      onChangeFunction={() => this.checkAllCallback(this.state.columns,this.state.rows)}/></th>
+        {this.state.columns.map((column, index, array) => {
+          let onColumnSelection = () => {
+          };
 
-            if (this.props.sortable) {
-              onColumnSelection = () => this.sortCallback(column, index, array)
-            }
+          if (this.props.sortable) {
+            onColumnSelection = () => this.sortCallback(column, index, array)
+          }
 
-            return <DefaultColumnComponent key={column.id}
-                                           column={column}
-                                           isSortable={this.props.sortable}
-                                           sortOrder={column.sortOrder}
-                                           onColumnSelection={() => onColumnSelection(column, index, array)}/>
-          })}
-        </tr>
-        </thead>
-
-        <tbody>
-        {this.state.rows.map((row, index, array) => {
-          return <DefaultRowComponent key={index}
-                                      columns={this.state.columns}
-                                      row={row}
-                                      isSelected={row.selected}
-                                      onRowSelection={() => this.selectionCallback(row,index, array)}/>
+          return <DefaultColumnComponent key={column.id}
+                                         column={column}
+                                         isSortable={this.props.sortable}
+                                         sortOrder={column.sortOrder}
+                                         onColumnSelection={() => onColumnSelection(column, index, array)}/>
         })}
-        </tbody>
+      </tr>
+      </thead>
 
-      </table>);
+      <tbody>
+      {this.state.rows.map((row, index, array) => {
+        return <DefaultRowComponent key={index}
+                                    columns={this.state.columns}
+                                    row={row}
+                                    isSelected={row.selected}
+                                    onRowSelection={() => this.selectionCallback(row,index, array)}/>
+      })}
+      </tbody>
+
+    </table>);
+
+    if (this.props.useCard) {
+      return (
+        <Card>
+          {tableComponent}
+        </Card>);
+    }
+
+    return tableComponent;
   }
 }
 
@@ -224,7 +233,8 @@ Table.propTypes = {
   rowComponent: React.PropTypes.func,
   onRowSelection: React.PropTypes.func,
   onColumnSelection: React.PropTypes.func,
-  sortable: React.PropTypes.bool
+  sortable: React.PropTypes.bool,
+  useCard: React.PropTypes.bool
 
 };
 
@@ -233,6 +243,7 @@ Table.defaultProps = {
   rowComponent: DefaultRowComponent,
   onRowSelection: () => null,
   onColumnSelection: () => null,
-  sortable: true
+  sortable: true,
+  useCard: true
 };
 
