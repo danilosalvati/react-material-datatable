@@ -10,24 +10,30 @@ export default function Paginator({page, rowsPerPage, totalRows}) {
   }
 
   return (<div style={paginatorStyle.paginator}>
-    <div style={paginatorStyle.paginatorContent}>
-      Page:
-      <select style={paginatorStyle.selectStyle}>
-        {pagesArray.map(pageNumber => {
-          return (<option key={pageNumber} value={pageNumber}>{pageNumber}</option>);
-        })}
-      </select>
-      Rows per page:
-      <select style={paginatorStyle.selectStyle}>
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="15">15</option>
-      </select>
-      1-10 of 100
-      <ArrowButton isEnabled={false} arrowType="previous_arrow"/>
-      <ArrowButton isEnabled={true} arrowType="next_arrow"/>
+      <div style={paginatorStyle.paginatorContent}>
+        <label style={{verticalAlign:'middle'}}>
+          Page:
+        </label>
+        <select style={paginatorStyle.selectStyle}>
+          {pagesArray.map(pageNumber => {
+            return (<option key={pageNumber} value={pageNumber}>{pageNumber}</option>);
+          })}
+        </select>
+
+        <label style={{verticalAlign:'middle'}}>
+          Rows per page:
+        </label>
+        <select style={paginatorStyle.selectStyle}>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+        </select>
+        <label style={{verticalAlign:'middle'}}>1-10 of 100</label>
+        <ArrowButton isEnabled={false} arrowType="previous_arrow"/>
+        <ArrowButton isEnabled={true} arrowType="next_arrow"/>
+      </div>
     </div>
-  </div>);
+  );
 }
 
 Paginator.propTypes = {

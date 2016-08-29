@@ -23,7 +23,7 @@ export default function ArrowButton({arrowType, isEnabled, onClickFunction}) {
   }
 
   return (
-    <div style={{display:'inline-table', marginLeft:'12px', marginRight:'12px'}} onClick={onClickFunction}>
+    <div style={{display:'inline-table', marginLeft:'12px', marginRight:'12px', verticalAlign:'middle'}} onClick={onClickFunction}>
       <svg width='24px' height='24px'>
         {path}
       </svg>
