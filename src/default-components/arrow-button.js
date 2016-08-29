@@ -8,6 +8,7 @@ export default function ArrowButton({arrowType, isEnabled, onClickFunction}) {
   let fillOpacity = '0.54';
   if (!isEnabled) {
     fillOpacity = '0.20';
+    onClickFunction = () => {};
   }
 
   let path;

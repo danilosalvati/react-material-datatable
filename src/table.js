@@ -44,12 +44,26 @@ export default class Table extends React.Component {
       rows = sortRows(columns[0], 'ascendant', rows);
     }
 
-    this.state = {columns, rows, checkAllState: checkAllState};
+    /* Get only visible rows (useful for pagination) */
+    let visibleRows = rows.slice(this.props.rowsPerPage * (this.props.page - 1),
+      this.props.rowsPerPage * this.props.page);
+
+    this.state = {
+      columns,
+      rows,
+      visibleRows,
+      checkAllState,
+      page: this.props.page,
+      rowsPerPage: this.props.rowsPerPage
+    };
 
     this.selectionCallback = this.selectionCallback.bind(this);
     this.sortCallback = this.sortCallback.bind(this);
+    this.changePage = this.changePage.bind(this);
+    this.changePagePerRows = this.changePagePerRows.bind(this);
   }
 
+  /** Sorting **/
 
   sortCallback(currentValue, index, array) {
 
@@ -73,6 +87,8 @@ export default class Table extends React.Component {
 
     this.props.onColumnSelection(currentValue, index, array);
   }
+
+  /** Selection **/
 
   selectionCallback(currentValue, index, array) {
     array[index].selected = !array[index].selected;
@@ -111,6 +127,21 @@ export default class Table extends React.Component {
 
   }
 
+  /** Pagination **/
+  changePage(newPage) {
+    let visibleRows = this.state.rows.slice(this.props.rowsPerPage * (newPage - 1),
+      this.props.rowsPerPage * newPage);
+
+    this.setState({page: newPage, visibleRows});
+  }
+
+  changePagePerRows(newPagePerRows) {
+    let visibleRows = this.state.rows.slice(newPagePerRows * (this.props.page - 1),
+      newPagePerRows * this.props.page);
+
+    this.setState({rowsPerPage: newPagePerRows, visibleRows});
+  }
+
   render() {
 
     let tableComponent = (<table style={{...tableStyle, width: this.props.width, height:this.props.height}}>
@@ -138,12 +169,14 @@ export default class Table extends React.Component {
       </thead>
 
       <tbody>
-      {this.state.rows.map((row, index, array) => {
+      {this.state.visibleRows.map((row, index, array) => {
         return <DefaultRowComponent key={index}
                                     columns={this.state.columns}
                                     row={row}
                                     isSelected={row.selected}
-                                    onRowSelection={() => this.selectionCallback(row,index, array)}/>
+                                    onRowSelection={() => this.selectionCallback(row,
+                                    this.state.rowsPerPage * (this.state.page - 1) + index,
+                                    this.state.rows)}/>
       })}
       </tbody>
 
@@ -153,7 +186,11 @@ export default class Table extends React.Component {
       return (
         <Card width={this.props.width} height={this.props.height}>
           {tableComponent}
-          <Paginator page={1} totalRows={20} rowsPerPage={5} />
+          <Paginator page={this.state.page}
+                     totalRows={this.state.rows.length}
+                     rowsPerPage={this.state.rowsPerPage}
+                     onChangePageFunction={(newPage) => this.changePage(newPage)}
+                     onChangePagePerRowsFunction={(newPagePerRows) => this.changePagePerRows(newPagePerRows)}/>
         </Card>);
     }
 
@@ -174,7 +211,9 @@ Table.propTypes = {
   sortable: React.PropTypes.bool,
   useCard: React.PropTypes.bool,
   width: React.PropTypes.string,
-  height: React.PropTypes.string
+  height: React.PropTypes.string,
+  rowsPerPage: React.PropTypes.oneOf([5, 10, 15]),
+  page: React.PropTypes.number
 };
 
 Table.defaultProps = {
@@ -186,6 +225,8 @@ Table.defaultProps = {
   sortable: true,
   useCard: true,
   width: '100%',
-  height: '100%'
+  height: '100%',
+  rowsPerPage: 5,
+  page: 1
 };
 
