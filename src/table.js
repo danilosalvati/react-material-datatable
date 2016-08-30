@@ -85,7 +85,10 @@ export default class Table extends React.Component {
       rows = sortRows(currentValue, 'descendant', this.state.rows);
     }
 
-    this.setState({columns: array, rows: rows});
+    let visibleRows = rows.slice(this.props.rowsPerPage * (this.props.page - 1),
+      this.props.rowsPerPage * this.props.page);
+
+    this.setState({columns: array, visibleRows});
 
     this.props.onColumnSelection(currentValue, index, array);
   }
