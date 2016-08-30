@@ -15,7 +15,8 @@ export default function Paginator({page, rowsPerPage, totalRows, onChangePageFun
           Page:
         </label>
         <select style={paginatorStyle.selectStyle}
-                onChange={(event) => onChangePageFunction(parseInt(event.target.value))}>
+                onChange={(event) => onChangePageFunction(parseInt(event.target.value))}
+                value={page}>
           {pagesArray.map(pageNumber => {
             return (<option key={pageNumber} value={pageNumber}>{pageNumber}</option>);
           })}

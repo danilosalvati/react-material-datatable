@@ -88,7 +88,7 @@ export default class Table extends React.Component {
     let visibleRows = rows.slice(this.props.rowsPerPage * (this.props.page - 1),
       this.props.rowsPerPage * this.props.page);
 
-    this.setState({columns: array, visibleRows});
+    this.setState({columns: array, rows, visibleRows});
 
     this.props.onColumnSelection(currentValue, index, array);
   }
@@ -134,17 +134,23 @@ export default class Table extends React.Component {
 
   /** Pagination **/
   changePage(newPage) {
-    let visibleRows = this.state.rows.slice(this.props.rowsPerPage * (newPage - 1),
-      this.props.rowsPerPage * newPage);
+    let visibleRows = this.state.rows.slice(this.state.rowsPerPage * (newPage - 1),
+      this.state.rowsPerPage * newPage);
 
     this.setState({page: newPage, visibleRows});
   }
 
   changePagePerRows(newPagePerRows) {
-    let visibleRows = this.state.rows.slice(newPagePerRows * (this.props.page - 1),
-      newPagePerRows * this.props.page);
 
-    this.setState({rowsPerPage: newPagePerRows, visibleRows});
+    let firstElementToShow = this.state.rowsPerPage * (this.state.page - 1);
+    let newPage = Math.floor(firstElementToShow / newPagePerRows) + 1;
+
+    console.log(firstElementToShow / newPagePerRows, "page = ", this.state.page, "firstElementToShow = ", firstElementToShow, "newPage = ", newPage);
+
+    let visibleRows = this.state.rows.slice(newPagePerRows * (newPage - 1),
+      newPagePerRows * newPage);
+
+    this.setState({rowsPerPage: newPagePerRows, page: newPage, visibleRows});
   }
 
   render() {
