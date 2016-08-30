@@ -85,8 +85,8 @@ export default class Table extends React.Component {
       rows = sortRows(currentValue, 'descendant', this.state.rows);
     }
 
-    let visibleRows = rows.slice(this.props.rowsPerPage * (this.props.page - 1),
-      this.props.rowsPerPage * this.props.page);
+    let visibleRows = rows.slice(this.state.rowsPerPage * (this.state.page - 1),
+      this.state.rowsPerPage * this.state.page);
 
     this.setState({columns: array, rows, visibleRows});
 
@@ -144,8 +144,6 @@ export default class Table extends React.Component {
 
     let firstElementToShow = this.state.rowsPerPage * (this.state.page - 1);
     let newPage = Math.floor(firstElementToShow / newPagePerRows) + 1;
-
-    console.log(firstElementToShow / newPagePerRows, "page = ", this.state.page, "firstElementToShow = ", firstElementToShow, "newPage = ", newPage);
 
     let visibleRows = this.state.rows.slice(newPagePerRows * (newPage - 1),
       newPagePerRows * newPage);
