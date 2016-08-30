@@ -8,6 +8,8 @@ import Paginator from './default-components/paginator';
 import {dataValidator} from './utils/validators';
 import {sortRows, selectAllRows, unselectAllRows} from './utils/utilities';
 
+import SingleSearchAndAddToolbar from './default-components/toolbars/single-search-add-remove-toolbar';
+
 export default class Table extends React.Component {
 
   constructor(props) {
@@ -144,6 +146,16 @@ export default class Table extends React.Component {
 
   render() {
 
+    let toolbarComponent;
+    switch (this.props.toolbar) {
+      case 'singleSearchAddRemove':
+        toolbarComponent = (<SingleSearchAndAddToolbar title="MyToolbar"/>);
+        break;
+      case 'none':
+      default:
+        toolbarComponent = null;
+    }
+
     let tableComponent = (<table style={{...tableStyle, width: this.props.width, height:this.props.height}}>
       <thead>
       <tr>
@@ -185,6 +197,7 @@ export default class Table extends React.Component {
     if (this.props.useCard) {
       return (
         <Card width={this.props.width} height={this.props.height}>
+          {toolbarComponent}
           {tableComponent}
           <Paginator page={this.state.page}
                      totalRows={this.state.rows.length}
@@ -213,7 +226,11 @@ Table.propTypes = {
   width: React.PropTypes.string,
   height: React.PropTypes.string,
   rowsPerPage: React.PropTypes.oneOf([5, 10, 15]),
-  page: React.PropTypes.number
+  page: React.PropTypes.number,
+  toolbar: React.PropTypes.oneOfType([
+    React.PropTypes.func,
+    React.PropTypes.oneOf(['none', 'singleSearchAddRemove']),
+  ])
 };
 
 Table.defaultProps = {
@@ -227,6 +244,7 @@ Table.defaultProps = {
   width: '100%',
   height: '100%',
   rowsPerPage: 5,
-  page: 1
+  page: 1,
+  toolbar: 'none'
 };
 

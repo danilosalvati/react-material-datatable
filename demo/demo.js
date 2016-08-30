@@ -39,6 +39,7 @@ export default class Demo extends React.Component {
                sortable={true}
                useCard={true}
                width="600px"
+               toolbar='singleSearchAddRemove'
         />
       </div>
     )
