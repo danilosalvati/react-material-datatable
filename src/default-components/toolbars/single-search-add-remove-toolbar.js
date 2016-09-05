@@ -4,6 +4,7 @@ import headerStyle from '../../styles/header-style'
 import SearchButton from './search-button';
 import AddButton from './add-button';
 import DeleteButton from './delete-button'
+import InputSearch from './input-search';
 
 
 export default class SingleSearchAndAddToolbar extends React.Component {
@@ -16,7 +17,7 @@ export default class SingleSearchAndAddToolbar extends React.Component {
 
     let contentBar = ( <label style={{verticalAlign:'middle'}}>{this.props.title}</label>);
     if (this.state.searching) {
-      contentBar = (<input type="text" placeholder='Search...'></input>);
+      contentBar = (<InputSearch searchCallback={this.props.searchCallback}/>);
     }
 
     return (
@@ -25,7 +26,8 @@ export default class SingleSearchAndAddToolbar extends React.Component {
           {contentBar}
           <div style={headerStyle.buttonsBar}>
             <div style={{paddingLeft:'24px'}}>
-              <SearchButton/>
+              <SearchButton onClickFunction={() => this.setState({searching: !this.state.searching})}
+                            isSelected={this.state.searching}/>
             </div>
             <div style={{paddingLeft:'24px'}}>
               <DeleteButton isEnabled={false}/>
@@ -41,9 +43,12 @@ export default class SingleSearchAndAddToolbar extends React.Component {
 }
 
 SingleSearchAndAddToolbar.propTypes = {
-  title: React.PropTypes.string
+  title: React.PropTypes.string,
+  searchCallback: React.PropTypes.func
 };
 
 SingleSearchAndAddToolbar.defaultProps = {
-  title: ""
+  title: "",
+  searchCallback: () => {
+  }
 };

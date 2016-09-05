@@ -50,19 +50,27 @@ export default class Table extends React.Component {
     let visibleRows = rows.slice(this.props.rowsPerPage * (this.props.page - 1),
       this.props.rowsPerPage * this.props.page);
 
+    let filteredIndices = {};
+    for (let i = 0; i < rows.length; i++) {
+      filteredIndices[i] = i;
+    }
+
     this.state = {
       columns,
       rows,
       visibleRows,
       checkAllState,
+      filteredRows: rows,
       page: this.props.page,
-      rowsPerPage: this.props.rowsPerPage
+      rowsPerPage: this.props.rowsPerPage,
+      filteredIndices
     };
 
     this.selectionCallback = this.selectionCallback.bind(this);
     this.sortCallback = this.sortCallback.bind(this);
     this.changePage = this.changePage.bind(this);
     this.changePagePerRows = this.changePagePerRows.bind(this);
+    this.search = this.search.bind(this);
   }
 
   /** Sorting **/
@@ -75,20 +83,20 @@ export default class Table extends React.Component {
       column.sortOrder = 'not_sorted';
     });
 
-    let rows;
+    let filteredRows;
 
     if (previousOrder === 'descendant' || previousOrder === "not_sorted") {
       array[index].sortOrder = 'ascendant';
-      rows = sortRows(currentValue, 'ascendant', this.state.rows);
+      filteredRows = sortRows(currentValue, 'ascendant', this.state.filteredRows);
     } else {
       array[index].sortOrder = 'descendant';
-      rows = sortRows(currentValue, 'descendant', this.state.rows);
+      filteredRows = sortRows(currentValue, 'descendant', this.state.filteredRows);
     }
 
-    let visibleRows = rows.slice(this.state.rowsPerPage * (this.state.page - 1),
+    let visibleRows = filteredRows.slice(this.state.rowsPerPage * (this.state.page - 1),
       this.state.rowsPerPage * this.state.page);
 
-    this.setState({columns: array, rows, visibleRows});
+    this.setState({columns: array, filteredRows, visibleRows});
 
     this.props.onColumnSelection(currentValue, index, array);
   }
@@ -96,7 +104,8 @@ export default class Table extends React.Component {
   /** Selection **/
 
   selectionCallback(currentValue, index, array) {
-    array[index].selected = !array[index].selected;
+    let rowIndex = this.state.filteredIndices[index];
+    array[rowIndex].selected = !array[rowIndex].selected;
 
     let count = 0;
     array.forEach(row => {
@@ -134,7 +143,7 @@ export default class Table extends React.Component {
 
   /** Pagination **/
   changePage(newPage) {
-    let visibleRows = this.state.rows.slice(this.state.rowsPerPage * (newPage - 1),
+    let visibleRows = this.state.filteredRows.slice(this.state.rowsPerPage * (newPage - 1),
       this.state.rowsPerPage * newPage);
 
     this.setState({page: newPage, visibleRows});
@@ -145,10 +154,49 @@ export default class Table extends React.Component {
     let firstElementToShow = this.state.rowsPerPage * (this.state.page - 1);
     let newPage = Math.floor(firstElementToShow / newPagePerRows) + 1;
 
-    let visibleRows = this.state.rows.slice(newPagePerRows * (newPage - 1),
+    let visibleRows = this.state.filteredRows.slice(newPagePerRows * (newPage - 1),
       newPagePerRows * newPage);
 
     this.setState({rowsPerPage: newPagePerRows, page: newPage, visibleRows});
+  }
+
+  /** Search **/
+  search(stringToSearch) {
+    if (stringToSearch === "") {
+      let visibleRows = this.state.rows.slice(this.state.rowsPerPage * (this.state.page - 1),
+        this.state.rowsPerPage * this.state.page);
+      let filteredIndices = {};
+      for (let i = 0; i < this.state.rows.length; i++) {
+        filteredIndices[i] = i;
+      }
+      this.setState({filteredRows: this.state.rows, visibleRows, filteredIndices});
+      return;
+    }
+    let filterBy = stringToSearch.toLowerCase();
+    let newFilteredRows = [];
+    let filteredIndices = {};
+    let currentIndex = 0;
+    let excludedCols = ['selected'];
+    this.state.rows.forEach((row, rowIndex) => {
+      let excluded = false;
+      for (let col in row) {
+        excludedCols.forEach(excludedCol => {
+          if (col == excludedCol) {
+            excluded = true;
+          }
+        });
+        if (!excluded && row[col].toLowerCase().indexOf(filterBy) !== -1) {
+          newFilteredRows.push(row);
+          filteredIndices[currentIndex] = rowIndex;
+          currentIndex++;
+          break;
+        }
+      }
+    });
+    let visibleRows = newFilteredRows.slice(this.state.rowsPerPage * (this.state.page - 1),
+      this.state.rowsPerPage * this.state.page);
+
+    this.setState({filteredRows: newFilteredRows, visibleRows, filteredIndices});
   }
 
   render() {
@@ -156,7 +204,7 @@ export default class Table extends React.Component {
     let toolbarComponent;
     switch (this.props.toolbar) {
       case 'singleSearchAddRemove':
-        toolbarComponent = (<SingleSearchAndAddToolbar title="MyToolbar"/>);
+        toolbarComponent = (<SingleSearchAndAddToolbar title="MyToolbar" searchCallback={this.search}/>);
         break;
       case 'none':
       default:
@@ -207,7 +255,7 @@ export default class Table extends React.Component {
           {toolbarComponent}
           {tableComponent}
           <Paginator page={this.state.page}
-                     totalRows={this.state.rows.length}
+                     totalRows={this.state.filteredRows.length}
                      rowsPerPage={this.state.rowsPerPage}
                      onChangePageFunction={(newPage) => this.changePage(newPage)}
                      onChangePagePerRowsFunction={(newPagePerRows) => this.changePagePerRows(newPagePerRows)}/>
